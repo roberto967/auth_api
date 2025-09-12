@@ -5,11 +5,15 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  DeleteDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 
 import { UserStatus } from '../enums/userStatus.enum';
 import { UserToken } from '../../auth/entities/confirmationToken.entity';
 import { RefreshToken } from '../../auth/entities/RefreshTokens.entity';
+import { Role } from '../../auth/entities/roles.entity';
 
 @Entity('users')
 export class User {
@@ -28,6 +32,14 @@ export class User {
     default: UserStatus.PENDING_VERIFICATION,
   })
   status: UserStatus;
+
+  @ManyToMany(() => Role, { eager: true })
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
+  roles: Role[];
 
   @Column({ nullable: true, select: false })
   passwordHash?: string | null;
@@ -51,4 +63,7 @@ export class User {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @DeleteDateColumn({ name: 'deleted_at', select: false })
+  deletedAt?: Date;
 }
