@@ -1,0 +1,42 @@
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from '../../user/entities/user.entity';
+import { UserTokenType } from '../enums/UserTokenTypes.enum';
+
+@Entity('user_tokens')
+export class UserToken {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ unique: true })
+  tokenHash: string; // Token will be hashed before storage
+
+  @Column({ name: 'expires_at' })
+  expiresAt: Date;
+
+  @Column({
+    type: 'enum',
+    enum: UserTokenType,
+  })
+  type: UserTokenType;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @ManyToOne(() => User, user => user.tokens)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @Column({ name: 'user_id' })
+  userId: string;
+
+  public isExpired(): boolean {
+    return Date.now() >= this.expiresAt.getTime();
+  }
+}
