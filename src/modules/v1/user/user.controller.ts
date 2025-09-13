@@ -1,6 +1,7 @@
 import { Controller, Get, Route, Tags } from 'tsoa';
 import { injectable } from 'tsyringe';
 import { UserService } from './user.service';
+import { HttpError } from '../../../error/HttpError';
 
 @injectable()
 @Route('users')
@@ -13,5 +14,10 @@ export class UsersController extends Controller {
   @Get()
   public createUser(): string {
     return this.userService.createUser();
+  }
+
+  @Get('throw')
+  public throwError(): void {
+    throw new HttpError(400, 'This is a test error');
   }
 }

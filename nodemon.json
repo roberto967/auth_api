@@ -9,7 +9,7 @@
     "node_modules",
     "dist"
   ],
-  "exec": "ts-node ./src/main.ts",
+  "exec": "ts-node ./src/server.ts",
   "events": {
     "restart": "yarn tsoa:gen"
   }

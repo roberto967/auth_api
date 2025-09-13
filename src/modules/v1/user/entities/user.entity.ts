@@ -12,7 +12,7 @@ import {
 
 import { UserStatus } from '../enums/userStatus.enum';
 import { UserToken } from '../../auth/entities/confirmationToken.entity';
-import { RefreshToken } from '../../auth/entities/RefreshTokens.entity';
+import { RefreshToken } from '../../auth/entities/refreshTokens.entity';
 import { Role } from '../../auth/entities/roles.entity';
 
 @Entity('users')
