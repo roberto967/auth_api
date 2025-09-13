@@ -7,7 +7,14 @@
   "spec": {
     "basePath": "v1",
     "outputDirectory": "src/generated/v1",
-    "specVersion": 3
+    "specVersion": 3,
+    "securityDefinitions": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
   },
   "routes": {
     "routesDir": "src/generated/v1",

@@ -46,10 +46,13 @@ export class User {
 
   // Tokens relationship
   @OneToMany(() => UserToken, token => token.user)
-  tokens: UserToken[];
+  confirmationTokens: UserToken[];
 
   @OneToMany(() => RefreshToken, token => token.user)
   refreshTokens: RefreshToken[];
+
+  @Column('integer', { default: 0 })
+  tokenVersion: number;
 
   // OAuth fields
   @Column({ nullable: true })

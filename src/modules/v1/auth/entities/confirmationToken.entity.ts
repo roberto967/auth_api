@@ -29,7 +29,7 @@ export class UserToken {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @ManyToOne(() => User, user => user.tokens)
+  @ManyToOne(() => User, user => user.confirmationTokens)
   @JoinColumn({ name: 'user_id' })
   user: User;
 

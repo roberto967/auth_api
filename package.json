@@ -18,6 +18,9 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/glob": "^9.0.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/passport-local": "^1.0.38",
     "@types/swagger-ui-express": "^4.1.8",
     "eslint": "^9.35.0",
     "eslint-config-prettier": "^10.1.8",
@@ -39,12 +42,17 @@
     "express": "^5.1.0",
     "glob": "^11.0.3",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
     "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
+    "pg": "^8.16.3",
     "promisify": "^0.0.3",
     "reflect-metadata": "^0.2.2",
     "swagger-ui-express": "^5.0.1",
     "tsoa": "^6.6.0",
     "tsyringe": "^4.10.0",
-    "typeorm": "^0.3.26"
+    "typeorm": "^0.3.26",
+    "typeorm-naming-strategies": "^4.1.0"
   }
 }

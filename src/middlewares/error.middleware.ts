@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { HttpError } from '../error/HttpError';
+import { HttpError } from '../error/http.error';
 
 export function errorHandler(
   err: Error,
@@ -9,6 +9,7 @@ export function errorHandler(
 ) {
   console.error(`[ERROR] ${new Date().toISOString()}`);
   console.error(`Route: ${req.method} ${req.originalUrl}`);
+  console.log(`[Trace] ${err.stack}`);
 
   if (err instanceof HttpError) {
     return res.status(err.statusCode).json({

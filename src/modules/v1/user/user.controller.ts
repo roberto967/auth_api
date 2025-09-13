@@ -1,7 +1,7 @@
 import { Controller, Get, Route, Tags } from 'tsoa';
 import { injectable } from 'tsyringe';
 import { UserService } from './user.service';
-import { HttpError } from '../../../error/HttpError';
+import { HttpError } from '../../../error/http.error';
 
 @injectable()
 @Route('users')
