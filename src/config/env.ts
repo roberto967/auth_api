@@ -3,7 +3,7 @@ import { TokenVariables } from './interfaces/token-config.interface';
 import { DbEnvVariables } from './interfaces/db-config.interface';
 dotenv.config();
 
-export const PORT = process.env.PORT ?? 8080;
+export const PORT = process.env.PORT;
 
 export const tokenConfig: TokenVariables = {
   ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
