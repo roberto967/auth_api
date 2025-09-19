@@ -20,6 +20,11 @@ import {
 import { HttpErrors } from '../../../common/Enum/httpsErros.enum';
 import { unexpectedErrorExample } from '../../../error/example/unexpected.example';
 import { IErrorResponse } from '../../../error/interface/error.interface';
+import { LoginUserDto } from './dto/loginLocal.dto';
+import {
+  forbiddenErrorExample,
+  invalidCredentialsErrorExample,
+} from '../../../error/example/unauthorized.example';
 
 @injectable()
 @Route('auth')
@@ -50,6 +55,37 @@ export class AuthController {
   @Middlewares(validateDto(SignUpDto))
   public async signUp(@Body() signUpData: SignUpDto): Promise<AuthResponseDto> {
     const tokens = await this.authService.signUp(signUpData);
+
+    return tokens;
+  }
+
+  @SuccessResponse('200', 'OK')
+  @Response<IErrorResponse>(
+    HttpErrors.BadRequest,
+    'Validation Failed',
+    validationErrorExample,
+  )
+  @Response<IErrorResponse>(
+    500,
+    'Internal Server Error',
+    unexpectedErrorExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Forbidden,
+    'Forbidden',
+    forbiddenErrorExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Unauthorized,
+    'Invalid Credentials',
+    invalidCredentialsErrorExample,
+  )
+  @Post('login')
+  @Middlewares(validateDto(LoginUserDto))
+  public async signIn(
+    @Body() loginData: LoginUserDto,
+  ): Promise<AuthResponseDto> {
+    const tokens = await this.authService.login(loginData);
 
     return tokens;
   }

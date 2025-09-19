@@ -37,7 +37,7 @@ export class User {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
-  @Column({ nullable: true, select: false })
+  @Column({ nullable: true })
   passwordHash?: string | null;
 
   // Tokens relationship

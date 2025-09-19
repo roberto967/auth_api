@@ -7,7 +7,15 @@ import { AuthResponseDto } from './dto/authResponse.dto';
 import { UserRole } from './enum/userRole.enum';
 import { PermissionsService } from './permissions.service';
 import { InjectService } from '../../../common/decorator/injectServices.decorator';
-import { ConflictError } from '../../../error/custom.error';
+import {
+  ConflictError,
+  ForbiddenError,
+  InvalidCredentialsError,
+  UnauthorizedError,
+} from '../../../error/custom.error';
+import { LoginUserDto } from './dto/loginLocal.dto';
+import { User } from '../user/entities/user.entity';
+import { UserStatus } from '../user/enums/userStatus.enum';
 
 @injectable()
 export class AuthService {
@@ -25,7 +33,7 @@ export class AuthService {
     private readonly permissionsService: PermissionsService,
   ) {}
 
-  public async signUp(signUpData: SignUpDto) {
+  public async signUp(signUpData: SignUpDto): Promise<AuthResponseDto> {
     const user = await this.userService.findUserByEmail(signUpData.email);
     if (user) {
       throw new ConflictError('Error in registration', [
@@ -50,6 +58,41 @@ export class AuthService {
     const loginTokens: AuthResponseDto = {
       accessToken: this.tokenService.createAccessToken(newUser),
       refreshToken: await this.tokenService.createRefreshToken(newUser),
+    };
+
+    return loginTokens;
+  }
+
+  public async login(loginData: LoginUserDto): Promise<AuthResponseDto> {
+    const user: User | null = await this.userService.findUserByEmail(
+      loginData.email,
+    );
+
+    const isPasswordValid = user
+      ? await this.cryptoService.validatePassword(
+          loginData.password,
+          user.passwordHash,
+        )
+      : false;
+
+    if (!user || !isPasswordValid) {
+      throw new InvalidCredentialsError('Invalid email or password');
+    }
+
+    if (
+      user.status === UserStatus.INACTIVE ||
+      user.status === UserStatus.BANNED ||
+      user.status === UserStatus.PENDING_VERIFICATION
+    ) {
+      throw new ForbiddenError(
+        'Your account is not active. Please contact support.',
+        null,
+      );
+    }
+
+    const loginTokens: AuthResponseDto = {
+      accessToken: this.tokenService.createAccessToken(user),
+      refreshToken: await this.tokenService.createRefreshToken(user),
     };
 
     return loginTokens;

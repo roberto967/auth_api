@@ -1,12 +1,14 @@
-import { IsEmail, IsNotEmpty, IsStrongPassword } from 'class-validator';
-import { strongPasswordConfig } from '../../../../config/passwordConfig';
+import { IsEmail, IsNotEmpty } from 'class-validator';
+import { Example } from 'tsoa';
 
 export class LoginUserDto {
+  @Example('john.doe@example.com')
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
-  @IsStrongPassword(strongPasswordConfig)
+  @Example('P@ssw0rd!')
+  // @IsStrongPassword(strongPasswordConfig)
   @IsNotEmpty()
   password: string;
 }
