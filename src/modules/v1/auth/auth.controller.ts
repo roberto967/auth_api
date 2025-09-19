@@ -36,8 +36,9 @@ export class AuthController {
   ) {}
 
   /**
-   * Register a new user in the system.
+   *  Register a new user in the system.
    * If successful, returns a pair of access and update tokens.
+   * @summary User Registration
    * @param signUpData Object containing the data required to create the new user's account (e.g., name, email, password).
    * @returns An object containing the access and refresh tokens for the newly created user.
    */
@@ -68,6 +69,7 @@ export class AuthController {
   /**
    * Authenticate a user using their email and password.
    * If successful, returns a pair of access and refresh tokens.
+   * @summary User Login
    * @param loginData Object containing the user's login credentials (email and password).
    * @returns An object containing the access and refresh tokens.
    */

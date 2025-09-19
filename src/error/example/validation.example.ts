@@ -18,6 +18,6 @@ export const validationErrorExample: IErrorResponse = {
 export const conflictErrorExample: IErrorResponse = {
   name: 'ConflictError',
   statusCode: HttpErrors.Conflict,
-  message: MESSAGE,
+  message: '',
   details: [],
 };
