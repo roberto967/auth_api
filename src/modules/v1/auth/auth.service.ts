@@ -11,7 +11,6 @@ import {
   ConflictError,
   ForbiddenError,
   InvalidCredentialsError,
-  UnauthorizedError,
 } from '../../../error/custom.error';
 import { LoginUserDto } from './dto/loginLocal.dto';
 import { User } from '../user/entities/user.entity';

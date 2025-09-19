@@ -35,6 +35,12 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
+  /**
+   * Register a new user in the system.
+   * If successful, returns a pair of access and update tokens.
+   * @param signUpData Object containing the data required to create the new user's account (e.g., name, email, password).
+   * @returns An object containing the access and refresh tokens for the newly created user.
+   */
   @SuccessResponse('201', 'Created')
   @Response<IErrorResponse>(
     HttpErrors.BadRequest,
@@ -59,6 +65,12 @@ export class AuthController {
     return tokens;
   }
 
+  /**
+   * Authenticate a user using their email and password.
+   * If successful, returns a pair of access and refresh tokens.
+   * @param loginData Object containing the user's login credentials (email and password).
+   * @returns An object containing the access and refresh tokens.
+   */
   @SuccessResponse('200', 'OK')
   @Response<IErrorResponse>(
     HttpErrors.BadRequest,
