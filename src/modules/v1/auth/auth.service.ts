@@ -3,33 +3,34 @@ import { CryptoService } from './crypto.service';
 import { UserService } from '../user/user.service';
 import { TokenService } from './token.service';
 import { SignUpDto } from './dto/singUp.dto';
-import { HttpError } from '../../../error/http.error';
-import { HttpErrors } from '../../../common/Enum/httpsErros.enum';
 import { AuthResponseDto } from './dto/authResponse.dto';
 import { UserRole } from './enum/userRole.enum';
 import { PermissionsService } from './permissions.service';
-import { InjectService } from '../../../common/decorator/InjectServices.decorator';
+import { InjectService } from '../../../common/decorator/injectServices.decorator';
+import { ConflictError } from '../../../error/custom.error';
 
 @injectable()
 export class AuthService {
   constructor(
+    @InjectService(UserService)
     private readonly userService: UserService,
 
+    @InjectService(CryptoService)
     private readonly cryptoService: CryptoService,
 
+    @InjectService(TokenService)
     private readonly tokenService: TokenService,
 
+    @InjectService(PermissionsService)
     private readonly permissionsService: PermissionsService,
   ) {}
 
   public async signUp(signUpData: SignUpDto) {
     const user = await this.userService.findUserByEmail(signUpData.email);
     if (user) {
-      throw new HttpError(
-        'ValidationError',
-        HttpErrors.BadRequest,
-        'Email already in use',
-      );
+      throw new ConflictError('Error in registration', [
+        'email already in use',
+      ]);
     }
 
     const hashedPassword = await this.cryptoService.hashPassword(
@@ -42,7 +43,7 @@ export class AuthService {
 
     const newUser = await this.userService.createUser({
       ...signUpData,
-      password: hashedPassword,
+      passwordHash: hashedPassword,
       role: initialRole,
     });
 

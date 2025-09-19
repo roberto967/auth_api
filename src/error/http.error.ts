@@ -1,6 +1,7 @@
 import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IErrorResponse } from './interface/error.interface';
 
-export class HttpError extends Error {
+export class HttpError extends Error implements IErrorResponse {
   @IsString()
   public readonly name: string;
 
@@ -22,5 +23,14 @@ export class HttpError extends Error {
     this.statusCode = statusCode;
     this.details = details;
     Object.setPrototypeOf(this, new.target.prototype);
+  }
+
+  public toJSON() {
+    return {
+      name: this.name,
+      statusCode: this.statusCode,
+      message: this.message,
+      details: this.details,
+    };
   }
 }

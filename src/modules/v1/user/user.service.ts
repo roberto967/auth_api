@@ -1,8 +1,8 @@
 import { injectable } from 'tsyringe';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { InjectRepository } from '../../../common/decorator/InjectRepository.decorator';
-import { CreateUserDto } from './dto/user.dto';
+import { InjectRepository } from '../../../common/decorator/injectRepository.decorator';
+import { CreateUserDto } from './dto/createUser.dto';
 
 @injectable()
 export class UserService {

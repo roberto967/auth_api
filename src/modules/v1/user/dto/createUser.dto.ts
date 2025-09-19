@@ -3,7 +3,7 @@ import { Role } from '../../auth/entities/roles.entity';
 export class CreateUserDto {
   email: string;
 
-  password: string;
+  passwordHash: string;
 
   name: string;
 

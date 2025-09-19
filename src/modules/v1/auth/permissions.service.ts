@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm';
-import { InjectRepository } from '../../../common/decorator/InjectRepository.decorator';
+import { InjectRepository } from '../../../common/decorator/injectRepository.decorator';
 import { Role } from './entities/roles.entity';
 import { Permission } from './entities/permission.entity';
 import { UserRole } from './enum/userRole.enum';

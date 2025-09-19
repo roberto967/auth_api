@@ -11,10 +11,15 @@ import {
 } from 'tsoa';
 import { SignUpDto } from './dto/singUp.dto';
 import { AuthResponseDto } from './dto/authResponse.dto';
-import { InjectService } from '../../../common/decorator/InjectServices.decorator';
+import { InjectService } from '../../../common/decorator/injectServices.decorator';
 import { validateDto } from './middleware/validation.middleware';
-import { validationErrorExample } from './interfaces/errorResponse.interface';
-import { HttpError } from '../../../error/http.error';
+import {
+  conflictErrorExample,
+  validationErrorExample,
+} from '../../../error/example/validation.example';
+import { HttpErrors } from '../../../common/Enum/httpsErros.enum';
+import { unexpectedErrorExample } from '../../../error/example/unexpected.example';
+import { IErrorResponse } from '../../../error/interface/error.interface';
 
 @injectable()
 @Route('auth')
@@ -26,7 +31,21 @@ export class AuthController {
   ) {}
 
   @SuccessResponse('201', 'Created')
-  @Response<HttpError>(400, 'Validation Failed', validationErrorExample)
+  @Response<IErrorResponse>(
+    HttpErrors.BadRequest,
+    'Validation Failed',
+    validationErrorExample,
+  )
+  @Response<IErrorResponse>(
+    500,
+    'Internal Server Error',
+    unexpectedErrorExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Conflict,
+    'Conflict Error',
+    conflictErrorExample,
+  )
   @Post('signup')
   @Middlewares(validateDto(SignUpDto))
   public async signUp(@Body() signUpData: SignUpDto): Promise<AuthResponseDto> {
