@@ -8,10 +8,14 @@ import {
   AccessTokenPayload,
   RefreshTokenPayload,
 } from './interfaces/token.types';
+import { InjectRepository } from '../../../common/decorator/InjectRepository.decorator';
 
 @injectable()
 export class TokenService {
-  constructor(private readonly tokenRepository: Repository<RefreshToken>) {}
+  constructor(
+    @InjectRepository(RefreshToken)
+    private readonly refreshTokenRepository: Repository<RefreshToken>,
+  ) {}
 
   createAccessToken(user: User): string {
     const payload: AccessTokenPayload = {
@@ -26,15 +30,25 @@ export class TokenService {
   }
 
   async createRefreshToken(user: User): Promise<string> {
-    await this.tokenRepository.save({ userId: user.id });
+    await this.refreshTokenRepository.delete({ user: user });
 
     const payload: RefreshTokenPayload = {
       sub: user.id,
       email: user.email,
     };
 
-    return jwt.sign(payload, tokenConfig.REFRESH_TOKEN_SECRET, {
+    const refreshToken = jwt.sign(payload, tokenConfig.REFRESH_TOKEN_SECRET, {
       expiresIn: '7d',
     });
+
+    const tokenEntity = this.refreshTokenRepository.create({
+      tokenHash: refreshToken,
+      user: user,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    });
+
+    await this.refreshTokenRepository.save(tokenEntity);
+
+    return refreshToken;
   }
 }

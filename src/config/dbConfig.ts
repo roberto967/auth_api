@@ -10,6 +10,7 @@ export const dbConfig: DataSourceOptions = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   synchronize: true, // never use TRUE in production!
+  // dropSchema: true, // Adicione esta linha para dropar o schema a cada conexão
   logging: true,
   entities: [
     path.join(__dirname + '/../modules/**/entities/*.entity{.ts,.js}'),

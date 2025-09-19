@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from '../../user/entities/user.entity';
-import { UserTokenType } from '../enums/userTokenTypes.enum';
+import { UserTokenType } from '../enum/userTokenTypes.enum';
 
 @Entity('user_tokens')
 export class UserToken {

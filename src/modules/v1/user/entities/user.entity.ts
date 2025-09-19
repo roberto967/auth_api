@@ -6,8 +6,8 @@ import {
   UpdateDateColumn,
   OneToMany,
   DeleteDateColumn,
-  ManyToMany,
-  JoinTable,
+  ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 import { UserStatus } from '../enums/userStatus.enum';
@@ -33,13 +33,9 @@ export class User {
   })
   status: UserStatus;
 
-  @ManyToMany(() => Role, { eager: true })
-  @JoinTable({
-    name: 'user_roles',
-    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
-  })
-  roles: Role[];
+  @ManyToOne(() => Role, { eager: true })
+  @JoinColumn({ name: 'role_id' })
+  role: Role;
 
   @Column({ nullable: true, select: false })
   passwordHash?: string | null;
@@ -61,6 +57,7 @@ export class User {
   @Column({ name: 'provider_id', nullable: true, unique: true })
   providerId?: string | null;
 
+  // Timestamps - TypeORM will handle these automatically
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

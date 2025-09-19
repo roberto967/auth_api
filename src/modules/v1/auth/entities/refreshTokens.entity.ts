@@ -22,7 +22,7 @@ export class RefreshToken {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @ManyToOne(() => User, user => user.refreshTokens)
+  @ManyToOne(() => User, user => user.refreshTokens, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

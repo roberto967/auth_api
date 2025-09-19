@@ -13,8 +13,10 @@ export function errorHandler(
 
   if (err instanceof HttpError) {
     return res.status(err.statusCode).json({
+      name: err.name,
       statusCode: err.statusCode,
       message: err.message,
+      details: err.details,
     });
   }
 

@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import helmet from 'helmet';
 import cors from 'cors';
 import v1 from './modules/v1';
-import { errorHandler } from './middlewares/error.middleware';
+import { errorHandler } from './middleware/error.middleware';
 import passport from 'passport';
 import { appDataSource } from './database/dbConnection';
 

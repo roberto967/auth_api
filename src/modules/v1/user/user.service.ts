@@ -1,7 +1,8 @@
 import { injectable } from 'tsyringe';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { InjectRepository } from '../../../common/decorators/InjectRepository';
+import { InjectRepository } from '../../../common/decorator/InjectRepository.decorator';
+import { CreateUserDto } from './dto/user.dto';
 
 @injectable()
 export class UserService {
@@ -10,11 +11,13 @@ export class UserService {
     private userRepository: Repository<User>,
   ) {}
 
-  public createUser(): string {
-    return 'user created';
+  public async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const newUser: User = this.userRepository.create(createUserDto);
+
+    return await this.userRepository.save(newUser);
   }
 
-  public async findUserById(id: string): Promise<User | null> {
+  public async findOneById(id: string): Promise<User | null> {
     const user = await this.userRepository.findOneBy({ id });
 
     return user;
@@ -22,6 +25,7 @@ export class UserService {
 
   public async findUserByEmail(email: string): Promise<User | null> {
     const user = await this.userRepository.findOneBy({ email });
+
     return user;
   }
 }

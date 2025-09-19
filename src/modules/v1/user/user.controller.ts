@@ -2,7 +2,7 @@ import { Controller, Get, Route, Tags } from 'tsoa';
 import { injectable } from 'tsyringe';
 import { UserService } from './user.service';
 import { HttpError } from '../../../error/http.error';
-import { HttpErrors } from '../../../common/Enums/httpsErros.enum';
+import { HttpErrors } from '../../../common/Enum/httpsErros.enum';
 
 @injectable()
 @Route('users')
@@ -14,11 +14,12 @@ export class UsersController extends Controller {
 
   @Get()
   public createUser(): string {
-    return this.userService.createUser();
+    // return this.userService.createUser();
+    return 'user created';
   }
 
   @Get('throw')
   public throwError(): void {
-    throw new HttpError(HttpErrors.BadRequest, 'This is a test error');
+    throw new HttpError('Teste', HttpErrors.BadRequest, 'This is a test error');
   }
 }
