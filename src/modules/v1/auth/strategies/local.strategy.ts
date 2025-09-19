@@ -17,7 +17,10 @@ export const localStrategy = new LocalStrategy(
       try {
         const user = await userService.findUserByEmail(email);
         if (!user) {
-          return done(new HttpError(401, 'Invalid email or password'), false);
+          return done(
+            new HttpError('Unauthorized', 401, 'Invalid email or password', []),
+            false,
+          );
         }
 
         const isPasswordValid = await cryptoService.validatePassword(
@@ -25,7 +28,10 @@ export const localStrategy = new LocalStrategy(
           user.passwordHash,
         );
         if (!isPasswordValid) {
-          return done(new HttpError(401, 'Invalid email or password'), false);
+          return done(
+            new HttpError('Unauthorized', 401, 'Invalid email or password', []),
+            false,
+          );
         }
         return done(null, user);
       } catch (error) {

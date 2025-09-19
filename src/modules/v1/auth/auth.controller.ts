@@ -8,6 +8,7 @@ import {
   SuccessResponse,
   Tags,
   Response,
+  Request,
 } from 'tsoa';
 import { SignUpDto } from './dto/singUp.dto';
 import { AuthResponseDto } from './dto/authResponse.dto';
@@ -25,6 +26,9 @@ import {
   forbiddenErrorExample,
   invalidCredentialsErrorExample,
 } from '../../../error/example/unauthorized.example';
+import { localAuthMiddleware } from './middleware/auth.middleware';
+import { Request as ExpressRequest } from 'express';
+import { User } from '../user/entities/user.entity';
 
 @injectable()
 @Route('auth')
@@ -36,7 +40,7 @@ export class AuthController {
   ) {}
 
   /**
-   *  Register a new user in the system.
+   * Register a new user in the system.
    * If successful, returns a pair of access and update tokens.
    * @summary User Registration
    * @param signUpData Object containing the data required to create the new user's account (e.g., name, email, password).
@@ -70,7 +74,7 @@ export class AuthController {
    * Authenticate a user using their email and password.
    * If successful, returns a pair of access and refresh tokens.
    * @summary User Login
-   * @param loginData Object containing the user's login credentials (email and password).
+   * @param _loginData Object containing the user's login credentials (email and password).
    * @returns An object containing the access and refresh tokens.
    */
   @SuccessResponse('200', 'OK')
@@ -95,11 +99,15 @@ export class AuthController {
     invalidCredentialsErrorExample,
   )
   @Post('login')
-  @Middlewares(validateDto(LoginUserDto))
+  @Middlewares(validateDto(LoginUserDto), localAuthMiddleware)
   public async signIn(
-    @Body() loginData: LoginUserDto,
+    @Request() req: ExpressRequest,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    @Body() _loginData: LoginUserDto,
   ): Promise<AuthResponseDto> {
-    const tokens = await this.authService.login(loginData);
+    const user = req.user as User;
+
+    const tokens = await this.authService.login(user);
 
     return tokens;
   }

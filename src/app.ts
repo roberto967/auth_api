@@ -8,9 +8,12 @@ import passport from 'passport';
 import { appDataSource } from './database/dbConnection';
 
 import { Request, Response } from 'express';
+import { configurePassport } from './config/passport';
 
 export function createApp(): Application {
   const app: Application = express();
+
+  configurePassport();
 
   app.use(helmet());
   app.use(cors());

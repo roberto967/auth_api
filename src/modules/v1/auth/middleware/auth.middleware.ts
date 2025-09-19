@@ -1,0 +1,34 @@
+import { Request, Response, NextFunction } from 'express';
+import passport from 'passport';
+import { User } from '../../user/entities/user.entity';
+import { IErrorResponse } from '../../../../error/interface/error.interface';
+import { HttpErrors } from '../../../../common/Enum/httpsErros.enum';
+
+export const localAuthMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  (
+    passport.authenticate(
+      'local',
+      { session: false },
+      (err: Error, user: User, info: { message?: string } | undefined) => {
+        if (err) {
+          return next(err);
+        }
+        if (!user) {
+          const errorResponse: IErrorResponse = {
+            name: 'InvalidCredentialsError',
+            statusCode: HttpErrors.Unauthorized,
+            message: info?.message || 'Invalid email or password.',
+            details: null,
+          };
+          return res.status(HttpErrors.Unauthorized).json(errorResponse);
+        }
+        req.user = user;
+        next();
+      },
+    ) as (req: Request, res: Response, next: NextFunction) => void
+  )(req, res, next);
+};

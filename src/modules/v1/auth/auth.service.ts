@@ -62,22 +62,7 @@ export class AuthService {
     return loginTokens;
   }
 
-  public async login(loginData: LoginUserDto): Promise<AuthResponseDto> {
-    const user: User | null = await this.userService.findUserByEmail(
-      loginData.email,
-    );
-
-    const isPasswordValid = user
-      ? await this.cryptoService.validatePassword(
-          loginData.password,
-          user.passwordHash,
-        )
-      : false;
-
-    if (!user || !isPasswordValid) {
-      throw new InvalidCredentialsError('Invalid email or password');
-    }
-
+  public async login(user: User): Promise<AuthResponseDto> {
     if (
       user.status === UserStatus.INACTIVE ||
       user.status === UserStatus.BANNED ||
