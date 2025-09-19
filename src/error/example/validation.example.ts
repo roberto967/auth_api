@@ -11,6 +11,7 @@ export const validationErrorExample: IErrorResponse = {
   details: [
     'email must be a valid email',
     'password must be at least 8 characters long',
+    '<obrigatory field> is required',
     '...',
   ],
 };
