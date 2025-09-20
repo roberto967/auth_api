@@ -11,7 +11,7 @@ try {
   userService = container.resolve(UserService);
 }
 
-export const jwtStrategy = new JwtStrategy(
+export const jwtStrategy: JwtStrategy = new JwtStrategy(
   {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: process.env.ACCESS_TOKEN_SECRET,

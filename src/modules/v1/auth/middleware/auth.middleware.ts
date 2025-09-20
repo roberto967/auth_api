@@ -4,11 +4,11 @@ import { User } from '../../user/entities/user.entity';
 import { IErrorResponse } from '../../../../error/interface/error.interface';
 import { HttpErrors } from '../../../../common/Enum/httpsErros.enum';
 
-export const localAuthMiddleware = (
+export function localAuthMiddleware(
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): void {
   (
     passport.authenticate(
       'local',
@@ -31,7 +31,7 @@ export const localAuthMiddleware = (
       },
     ) as (req: Request, res: Response, next: NextFunction) => void
   )(req, res, next);
-};
+}
 
 /* export function jwtAuthMiddleware(
   req: Request,

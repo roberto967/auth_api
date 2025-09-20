@@ -5,7 +5,9 @@ import { ClassConstructor } from 'class-transformer/types/interfaces';
 import { HttpError } from '../../../../error/http.error';
 import { HttpErrors } from '../../../../common/Enum/httpsErros.enum';
 
-export function validateDto<T extends object>(dtoClass: ClassConstructor<T>) {
+export function validateDto<T extends object>(
+  dtoClass: ClassConstructor<T>,
+): (req: Request, res: Response, next: NextFunction) => void {
   return (req: Request, res: Response, next: NextFunction) => {
     const dtoInstance = plainToInstance(dtoClass, req.body);
 

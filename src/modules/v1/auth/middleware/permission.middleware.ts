@@ -3,7 +3,9 @@ import { User } from '../../user/entities/user.entity';
 import { ForbiddenError } from '../../../../error/custom.error';
 import { UserRole } from '../enum/userRole.enum';
 
-export function requirePermissions(requiredPermissions: string[]) {
+export function requirePermissions(
+  requiredPermissions: string[],
+): (req: Request, res: Response, next: NextFunction) => void {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as User;
 

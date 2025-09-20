@@ -7,7 +7,7 @@ import { CryptoService } from '../crypto.service';
 const userService = container.resolve(UserService);
 const cryptoService = container.resolve(CryptoService);
 
-export const localStrategy = new LocalStrategy(
+export const localStrategy: LocalStrategy = new LocalStrategy(
   {
     usernameField: 'email',
     passwordField: 'password',
