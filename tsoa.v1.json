@@ -19,6 +19,7 @@
   "routes": {
     "routesDir": "src/generated/v1",
     "middleware": "express",
-    "iocModule": "src/ioc"
+    "iocModule": "src/ioc",
+    "authenticationModule": "src/modules/v1/auth/authentication"
   }
 }

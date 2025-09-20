@@ -1,8 +1,9 @@
-import { Controller, Get, Route, Tags } from 'tsoa';
+import { Controller, Get, Middlewares, Route, Tags, Security } from 'tsoa';
 import { injectable } from 'tsyringe';
 import { UserService } from './user.service';
 import { HttpError } from '../../../error/http.error';
 import { HttpErrors } from '../../../common/Enum/httpsErros.enum';
+import { requirePermissions } from '../auth/middleware/permission.middleware';
 
 @injectable()
 @Route('users')
@@ -16,6 +17,14 @@ export class UsersController extends Controller {
   public createUser(): string {
     // return this.userService.createUser();
     return 'user created';
+  }
+
+  @Get('permissao')
+  @Security('jwt')
+  @Middlewares(requirePermissions(['read:teste']))
+  public getPermissions(): string {
+    // return this.userService.getPermissions();
+    return 'user permissions';
   }
 
   @Get('throw')

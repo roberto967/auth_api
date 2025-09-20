@@ -7,12 +7,7 @@ import { AuthResponseDto } from './dto/authResponse.dto';
 import { UserRole } from './enum/userRole.enum';
 import { PermissionsService } from './permissions.service';
 import { InjectService } from '../../../common/decorator/injectServices.decorator';
-import {
-  ConflictError,
-  ForbiddenError,
-  InvalidCredentialsError,
-} from '../../../error/custom.error';
-import { LoginUserDto } from './dto/loginLocal.dto';
+import { ConflictError, ForbiddenError } from '../../../error/custom.error';
 import { User } from '../user/entities/user.entity';
 import { UserStatus } from '../user/enums/userStatus.enum';
 

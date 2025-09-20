@@ -14,7 +14,7 @@ try {
 export const jwtStrategy = new JwtStrategy(
   {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.JWT_SECRET,
+    secretOrKey: process.env.ACCESS_TOKEN_SECRET,
   },
   (payload: AccessTokenPayload, done) => {
     void (async () => {
