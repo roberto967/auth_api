@@ -8,7 +8,7 @@ import {
   AccessTokenPayload,
   RefreshTokenPayload,
 } from './interfaces/token.types';
-import { InjectRepository } from '../../../common/decorator/injectRepository.decorator';
+import { InjectRepository } from '../../../common/decorator/InjectRepository.decorator';
 
 @injectable()
 export class TokenService {

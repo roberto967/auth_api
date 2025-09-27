@@ -6,7 +6,7 @@ import { SignUpDto } from './dto/singUp.dto';
 import { AuthResponseDto } from './dto/authResponse.dto';
 import { UserRole } from './enum/userRole.enum';
 import { PermissionsService } from './permissions.service';
-import { InjectService } from '../../../common/decorator/injectServices.decorator';
+import { InjectService } from '../../../common/decorator/InjectService.decorator';
 import { ConflictError, ForbiddenError } from '../../../error/custom.error';
 import { User } from '../user/entities/user.entity';
 import { UserStatus } from '../user/enums/userStatus.enum';

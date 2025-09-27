@@ -12,7 +12,7 @@ import {
 } from 'tsoa';
 import { SignUpDto } from './dto/singUp.dto';
 import { AuthResponseDto } from './dto/authResponse.dto';
-import { InjectService } from '../../../common/decorator/injectServices.decorator';
+import { InjectService } from '../../../common/decorator/InjectService.decorator';
 import { validateDto } from './middleware/validation.middleware';
 import {
   conflictErrorExample,
