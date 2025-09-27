@@ -9,6 +9,7 @@ import {
   Tags,
   Response,
   Request,
+  Security,
 } from 'tsoa';
 import { SignUpDto } from './dto/singUp.dto';
 import { AuthResponseDto } from './dto/authResponse.dto';
@@ -37,7 +38,7 @@ export class AuthController {
   constructor(
     @InjectService(AuthService)
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   /**
    * Register a new user in the system.
@@ -110,5 +111,13 @@ export class AuthController {
     const tokens = await this.authService.login(user);
 
     return tokens;
+  }
+
+  @Post('logout')
+  @Security('jwt')
+  public async logout(@Request() req: ExpressRequest): Promise<string> {
+    const user = req.user as User;
+
+    return user.name;
   }
 }
