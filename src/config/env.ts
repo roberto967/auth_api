@@ -1,7 +1,14 @@
 import dotenv from 'dotenv';
 import { TokenVariables } from './interfaces/token-config.interface';
 import { DbEnvVariables } from './interfaces/db-config.interface';
-dotenv.config();
+
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '.env' });
+} else if (process.env.NODE_ENV === 'test') {
+  dotenv.config({ path: '.env.test' });
+} else {
+  dotenv.config({ path: '.env.development' });
+}
 
 export const PORT = process.env.PORT;
 
