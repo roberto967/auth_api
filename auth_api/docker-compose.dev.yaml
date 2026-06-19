@@ -32,7 +32,7 @@ services:
       - auth_api_network
 
   db:
-    image: postgres:14-alpine
+    image: postgres:18.4
     container_name: auth_db_DEV
     environment:
       - POSTGRES_USER=${DB_USER}
