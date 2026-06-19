@@ -41,7 +41,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql
     restart: unless-stopped
     networks:
       - auth_api_network
@@ -53,7 +53,6 @@ services:
 
 volumes:
   postgres_data:
-
 
 networks:
   auth_api_network:
