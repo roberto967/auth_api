@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 
 import { UserStatus } from '../enums/userStatus.enum';
-import { UserToken } from '../../auth/entities/confirmationToken.entity';
+import { ConfirmationToken } from '../../auth/entities/confirmationToken.entity';
 import { RefreshToken } from '../../auth/entities/refreshTokens.entity';
 import { Role } from '../../auth/entities/roles.entity';
 
@@ -41,8 +41,8 @@ export class User {
   passwordHash?: string | null;
 
   // Tokens relationship
-  @OneToMany(() => UserToken, token => token.user)
-  confirmationTokens!: UserToken[];
+  @OneToMany(() => ConfirmationToken, token => token.user)
+  confirmationTokens!: ConfirmationToken[];
 
   @OneToMany(() => RefreshToken, token => token.user)
   refreshTokens!: RefreshToken[];

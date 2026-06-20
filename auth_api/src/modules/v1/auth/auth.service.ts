@@ -2,7 +2,7 @@ import { injectable } from 'tsyringe';
 import { CryptoService } from './crypto.service';
 import { UserService } from '../user/user.service';
 import { TokenService } from './token.service';
-import { SignUpDto } from './dto/singUp.dto';
+import { SignUpDto } from './dto/signUp.dto';
 import { AuthResponseDto } from './dto/authResponse.dto';
 import { PermissionsService } from './permissions.service';
 import { InjectService } from '../../../common/decorator/InjectService.decorator';
@@ -60,6 +60,8 @@ export class AuthService {
 
     const activeUser = await this.userService.activateUser(user.id);
 
+    await this.tokenService.revokeRefreshToken(activeUser);
+
     return {
       accessToken: this.tokenService.createAccessToken(activeUser),
       refreshToken: await this.tokenService.createRefreshToken(activeUser),
@@ -67,7 +69,8 @@ export class AuthService {
   }
 
   public async refresh(rawToken: string): Promise<AuthResponseDto> {
-    const user = await this.tokenService.validateRefreshToken(rawToken);
+    const user =
+      await this.tokenService.validateAndConsumeRefreshToken(rawToken);
 
     if (
       user.status === UserStatus.INACTIVE ||
@@ -107,11 +110,11 @@ export class AuthService {
       );
     }
 
-    const loginTokens: AuthResponseDto = {
+    await this.tokenService.revokeRefreshToken(user);
+
+    return {
       accessToken: this.tokenService.createAccessToken(user),
       refreshToken: await this.tokenService.createRefreshToken(user),
     };
-
-    return loginTokens;
   }
 }

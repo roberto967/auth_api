@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import { UserService } from '../../user/user.service';
 import { AccessTokenPayload } from '../interfaces/token.types';
 import { tokenConfig } from '../../../../config/env';
+import { UserStatus } from '../../user/enums/userStatus.enum';
 
 export const jwtStrategy: JwtStrategy = new JwtStrategy(
   {
@@ -18,6 +19,9 @@ export const jwtStrategy: JwtStrategy = new JwtStrategy(
           return done(null, false);
         }
         if (payload.tokenVersion !== user.tokenVersion) {
+          return done(null, false);
+        }
+        if (user.status !== UserStatus.ACTIVE) {
           return done(null, false);
         }
         return done(null, user);

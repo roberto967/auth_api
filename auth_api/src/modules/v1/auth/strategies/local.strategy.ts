@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import { UserService } from '../../user/user.service';
 import { HttpError } from '../../../../error/http.error';
 import { CryptoService } from '../crypto.service';
+import { UserStatus } from '../../user/enums/userStatus.enum';
 
 export const localStrategy: LocalStrategy = new LocalStrategy(
   {
@@ -30,6 +31,13 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
         if (!isPasswordValid) {
           return done(
             new HttpError('Unauthorized', 401, 'Invalid email or password', []),
+            false,
+          );
+        }
+
+        if (user.status !== UserStatus.ACTIVE) {
+          return done(
+            new HttpError('Forbidden', 403, 'Your account is not active. Please contact support.', []),
             false,
           );
         }

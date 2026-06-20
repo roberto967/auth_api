@@ -1,8 +1,7 @@
 import { injectable } from 'tsyringe';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { RefreshToken } from './entities/refreshTokens.entity';
-import { UserToken } from './entities/confirmationToken.entity';
-import { UserTokenType } from './enum/userTokenTypes.enum';
+import { ConfirmationToken } from './entities/confirmationToken.entity';
 import { User } from '../user/entities/user.entity';
 import jwt from 'jsonwebtoken';
 import { tokenConfig, tokenDurationConfig } from '../../../config/env';
@@ -18,8 +17,8 @@ export class TokenService {
     @InjectRepository(RefreshToken)
     private readonly refreshTokenRepository: Repository<RefreshToken>,
 
-    @InjectRepository(UserToken)
-    private readonly userTokenRepository: Repository<UserToken>,
+    @InjectRepository(ConfirmationToken)
+    private readonly confirmationTokenRepository: Repository<ConfirmationToken>,
 
     @InjectService(CryptoService)
     private readonly cryptoService: CryptoService,
@@ -35,11 +34,11 @@ export class TokenService {
     return jwt.sign(payload, tokenConfig.ACCESS_TOKEN_SECRET, {
       expiresIn: Math.floor(
         tokenDurationConfig.ACCESS_TOKEN_DURATION_MS / 1000,
-      ), // Convert ms to seconds
+      ),
     });
   }
 
-  async validateRefreshToken(rawToken: string): Promise<User> {
+  async validateAndConsumeRefreshToken(rawToken: string): Promise<User> {
     const tokenHash = this.cryptoService.hashToken(rawToken);
 
     const tokenEntity = await this.refreshTokenRepository.findOne({
@@ -62,21 +61,19 @@ export class TokenService {
   }
 
   async createConfirmationToken(user: User): Promise<string> {
-    await this.userTokenRepository.delete({
-      user: { id: user.id },
-      type: UserTokenType.ACCOUNT_CONFIRMATION,
-    });
+    await this.confirmationTokenRepository.delete({ user: { id: user.id } });
 
     const [rawToken, tokenHash] = this.cryptoService.generateAndHashToken();
 
-    const tokenEntity = this.userTokenRepository.create({
+    const tokenEntity = this.confirmationTokenRepository.create({
       tokenHash,
       user,
-      type: UserTokenType.ACCOUNT_CONFIRMATION,
-      expiresAt: new Date(Date.now() + tokenDurationConfig.CONFIRMATION_TOKEN_DURATION_MS),
+      expiresAt: new Date(
+        Date.now() + tokenDurationConfig.CONFIRMATION_TOKEN_DURATION_MS,
+      ),
     });
 
-    await this.userTokenRepository.save(tokenEntity);
+    await this.confirmationTokenRepository.save(tokenEntity);
 
     return rawToken;
   }
@@ -84,8 +81,8 @@ export class TokenService {
   async validateAndConsumeConfirmationToken(rawToken: string): Promise<User> {
     const tokenHash = this.cryptoService.hashToken(rawToken);
 
-    const tokenEntity = await this.userTokenRepository.findOne({
-      where: { tokenHash, type: UserTokenType.ACCOUNT_CONFIRMATION },
+    const tokenEntity = await this.confirmationTokenRepository.findOne({
+      where: { tokenHash },
       relations: { user: true },
     });
 
@@ -94,11 +91,11 @@ export class TokenService {
     }
 
     if (tokenEntity.isExpired()) {
-      await this.userTokenRepository.delete({ id: tokenEntity.id });
+      await this.confirmationTokenRepository.delete({ id: tokenEntity.id });
       throw new UnauthorizedError('Confirmation token expired');
     }
 
-    await this.userTokenRepository.delete({ id: tokenEntity.id });
+    await this.confirmationTokenRepository.delete({ id: tokenEntity.id });
 
     return tokenEntity.user;
   }
@@ -109,13 +106,16 @@ export class TokenService {
   }
 
   async createRefreshToken(user: User): Promise<string> {
-    await this.refreshTokenRepository.delete({ user: user });
+    await this.refreshTokenRepository.delete({
+      user: { id: user.id },
+      expiresAt: LessThan(new Date()),
+    });
 
     const [rawToken, tokenHash] = this.cryptoService.generateAndHashToken();
 
     const tokenEntity = this.refreshTokenRepository.create({
       tokenHash,
-      user: user,
+      user,
       expiresAt: new Date(
         Date.now() + tokenDurationConfig.REFRESH_TOKEN_DURATION_MS,
       ),

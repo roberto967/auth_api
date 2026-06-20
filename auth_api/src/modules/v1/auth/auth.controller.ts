@@ -11,7 +11,7 @@ import {
   Request,
   Security,
 } from 'tsoa';
-import { SignUpDto } from './dto/singUp.dto';
+import { SignUpDto } from './dto/signUp.dto';
 import { AuthResponseDto } from './dto/authResponse.dto';
 import { InjectService } from '../../../common/decorator/InjectService.decorator';
 import { validateDto } from './middleware/validation.middleware';
