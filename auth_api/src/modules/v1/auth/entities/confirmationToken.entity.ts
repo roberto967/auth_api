@@ -17,7 +17,7 @@ export class UserToken {
   @Column({ unique: true })
   tokenHash!: string; // Token will be hashed before storage
 
-  @Column({ name: 'expires_at' })
+  @Column({ type: 'timestamp', name: 'expires_at' })
   expiresAt!: Date;
 
   @Column({
