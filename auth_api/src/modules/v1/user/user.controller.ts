@@ -30,13 +30,6 @@ export class UsersController extends Controller {
   }
 
   @SuccessResponse('200', 'OK')
-  @Get()
-  public createUser(): string {
-    // return this.userService.createUser();
-    return 'user created';
-  }
-
-  @SuccessResponse('200', 'OK')
   @Response<IErrorResponse>(
     HttpErrors.Unauthorized,
     'Unauthorized',

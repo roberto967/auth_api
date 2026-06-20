@@ -29,6 +29,9 @@ export const tokenConfig: TokenVariables = {
 export const tokenDurationConfig: TokenDurationVariables = {
   REFRESH_TOKEN_DURATION_MS: parseInt(requireEnv('REFRESH_TOKEN_DURATION_MS')),
   ACCESS_TOKEN_DURATION_MS: parseInt(requireEnv('ACCESS_TOKEN_DURATION_MS')),
+  CONFIRMATION_TOKEN_DURATION_MS: parseInt(
+    requireEnv('CONFIRMATION_TOKEN_DURATION_MS'),
+  ),
 };
 
 export const dbEnvVariables: DbEnvVariables = {

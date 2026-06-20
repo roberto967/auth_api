@@ -90,8 +90,10 @@ export class AuthService {
   }
 
   public async logout(user: User): Promise<void> {
-    await this.tokenService.revokeRefreshToken(user);
-    await this.userService.incrementTokenVersion(user.id);
+    const hadSession = await this.tokenService.revokeRefreshToken(user);
+    if (hadSession) {
+      await this.userService.incrementTokenVersion(user.id);
+    }
   }
 
   public async login(user: User): Promise<AuthResponseDto> {

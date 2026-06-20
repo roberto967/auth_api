@@ -15,6 +15,13 @@ export const invalidCredentialsErrorExample: IErrorResponse = {
   details: [],
 };
 
+export const invalidConfirmationTokenExample: IErrorResponse = {
+  name: 'UnauthorizedError',
+  statusCode: HttpErrors.Unauthorized,
+  message: 'Invalid or expired confirmation token.',
+  details: [],
+};
+
 export const invalidRefreshTokenExample: IErrorResponse = {
   name: 'UnauthorizedError',
   statusCode: HttpErrors.Unauthorized,

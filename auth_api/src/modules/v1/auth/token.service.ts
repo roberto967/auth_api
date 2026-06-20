@@ -12,8 +12,6 @@ import { InjectService } from '../../../common/decorator/InjectService.decorator
 import { CryptoService } from './crypto.service';
 import { UnauthorizedError } from '../../../error/custom.error';
 
-const CONFIRMATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
-
 @injectable()
 export class TokenService {
   constructor(
@@ -73,7 +71,7 @@ export class TokenService {
       tokenHash,
       user,
       type: UserTokenType.ACCOUNT_CONFIRMATION,
-      expiresAt: new Date(Date.now() + CONFIRMATION_TOKEN_TTL_MS),
+      expiresAt: new Date(Date.now() + tokenDurationConfig.CONFIRMATION_TOKEN_DURATION_MS),
     });
 
     await this.userTokenRepository.save(tokenEntity);
@@ -103,8 +101,9 @@ export class TokenService {
     return tokenEntity.user;
   }
 
-  async revokeRefreshToken(user: User): Promise<void> {
-    await this.refreshTokenRepository.delete({ user });
+  async revokeRefreshToken(user: User): Promise<boolean> {
+    const result = await this.refreshTokenRepository.delete({ user });
+    return (result.affected ?? 0) > 0;
   }
 
   async createRefreshToken(user: User): Promise<string> {

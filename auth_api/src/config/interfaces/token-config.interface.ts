@@ -3,6 +3,7 @@ export interface TokenVariables {
 }
 
 export interface TokenDurationVariables {
-  REFRESH_TOKEN_DURATION_MS: number; // Duration in milliseconds
-  ACCESS_TOKEN_DURATION_MS: number; // Duration in milliseconds
+  REFRESH_TOKEN_DURATION_MS: number;
+  ACCESS_TOKEN_DURATION_MS: number;
+  CONFIRMATION_TOKEN_DURATION_MS: number;
 }

@@ -29,6 +29,7 @@ import {
   expiredRefreshTokenExample,
   forbiddenErrorExample,
   invalidCredentialsErrorExample,
+  invalidConfirmationTokenExample,
   invalidRefreshTokenExample,
 } from '../../../error/example/unauthorized.example';
 import { localAuthMiddleware } from './middleware/auth.middleware';
@@ -71,7 +72,7 @@ export class AuthController {
   @Response<IErrorResponse>(
     HttpErrors.Unauthorized,
     'Invalid or expired confirmation token',
-    invalidRefreshTokenExample,
+    invalidConfirmationTokenExample,
   )
   @Post('confirm-email')
   @Middlewares(validateDto(ConfirmEmailDto))
