@@ -4,7 +4,6 @@ import { UserService } from '../user/user.service';
 import { TokenService } from './token.service';
 import { SignUpDto } from './dto/singUp.dto';
 import { AuthResponseDto } from './dto/authResponse.dto';
-import { UserRole } from './enum/userRole.enum';
 import { PermissionsService } from './permissions.service';
 import { InjectService } from '../../../common/decorator/InjectService.decorator';
 import { ConflictError, ForbiddenError } from '../../../error/custom.error';
@@ -39,9 +38,7 @@ export class AuthService {
       signUpData.password,
     );
 
-    const initialRole = await this.permissionsService.findRoleByName(
-      UserRole.USER,
-    );
+    const initialRole = await this.permissionsService.findRoleByName('user');
 
     const newUser = await this.userService.createUser({
       ...signUpData,

@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../../user/entities/user.entity';
 import { ForbiddenError } from '../../../../error/custom.error';
-import { UserRole } from '../enum/userRole.enum';
 
 export function requirePermissions(
   requiredPermissions: string[],
@@ -17,7 +16,7 @@ export function requirePermissions(
     }
 
     // Admins bypass permission checks
-    if (user.role.name === UserRole.ADMIN) {
+    if (user.role.name === 'admin') {
       return next();
     }
 

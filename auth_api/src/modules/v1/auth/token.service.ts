@@ -3,18 +3,20 @@ import { Repository } from 'typeorm';
 import { RefreshToken } from './entities/refreshTokens.entity';
 import { User } from '../user/entities/user.entity';
 import jwt from 'jsonwebtoken';
-import { tokenConfig } from '../../../config/env';
-import {
-  AccessTokenPayload,
-  RefreshTokenPayload,
-} from './interfaces/token.types';
+import { tokenConfig, tokenDurationConfig } from '../../../config/env';
+import { AccessTokenPayload } from './interfaces/token.types';
 import { InjectRepository } from '../../../common/decorator/InjectRepository.decorator';
+import { InjectService } from '../../../common/decorator/InjectService.decorator';
+import { CryptoService } from './crypto.service';
 
 @injectable()
 export class TokenService {
   constructor(
     @InjectRepository(RefreshToken)
     private readonly refreshTokenRepository: Repository<RefreshToken>,
+
+    @InjectService(CryptoService)
+    private readonly cryptoService: CryptoService,
   ) {}
 
   createAccessToken(user: User): string {
@@ -25,30 +27,27 @@ export class TokenService {
     };
 
     return jwt.sign(payload, tokenConfig.ACCESS_TOKEN_SECRET, {
-      expiresIn: '15d',
+      expiresIn: Math.floor(
+        tokenDurationConfig.ACCESS_TOKEN_DURATION_MS / 1000,
+      ), // Convert ms to seconds
     });
   }
 
   async createRefreshToken(user: User): Promise<string> {
     await this.refreshTokenRepository.delete({ user: user });
 
-    const payload: RefreshTokenPayload = {
-      sub: user.id,
-      email: user.email,
-    };
-
-    const refreshToken = jwt.sign(payload, tokenConfig.REFRESH_TOKEN_SECRET, {
-      expiresIn: '7d',
-    });
+    const [rawToken, tokenHash] = this.cryptoService.generateAndHashToken();
 
     const tokenEntity = this.refreshTokenRepository.create({
-      tokenHash: refreshToken,
+      tokenHash,
       user: user,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+      expiresAt: new Date(
+        Date.now() + tokenDurationConfig.REFRESH_TOKEN_DURATION_MS,
+      ),
     });
 
     await this.refreshTokenRepository.save(tokenEntity);
 
-    return refreshToken;
+    return rawToken;
   }
 }

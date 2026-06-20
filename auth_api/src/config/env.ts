@@ -1,5 +1,8 @@
 import dotenv from 'dotenv';
-import { TokenVariables } from './interfaces/token-config.interface';
+import {
+  TokenDurationVariables,
+  TokenVariables,
+} from './interfaces/token-config.interface';
 import { DbEnvVariables } from './interfaces/db-config.interface';
 
 const envPaths: Partial<Record<string, string>> = {
@@ -21,7 +24,11 @@ export const PORT = process.env.PORT;
 
 export const tokenConfig: TokenVariables = {
   ACCESS_TOKEN_SECRET: requireEnv('ACCESS_TOKEN_SECRET'),
-  REFRESH_TOKEN_SECRET: requireEnv('REFRESH_TOKEN_SECRET'),
+};
+
+export const tokenDurationConfig: TokenDurationVariables = {
+  REFRESH_TOKEN_DURATION_MS: parseInt(requireEnv('REFRESH_TOKEN_DURATION_MS')),
+  ACCESS_TOKEN_DURATION_MS: parseInt(requireEnv('ACCESS_TOKEN_DURATION_MS')),
 };
 
 export const dbEnvVariables: DbEnvVariables = {
