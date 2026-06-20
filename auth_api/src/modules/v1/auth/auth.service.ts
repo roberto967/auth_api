@@ -26,7 +26,7 @@ export class AuthService {
     private readonly permissionsService: PermissionsService,
   ) {}
 
-  public async signUp(signUpData: SignUpDto): Promise<AuthResponseDto> {
+  public async signUp(signUpData: SignUpDto): Promise<void> {
     const user = await this.userService.findUserByEmail(signUpData.email);
     if (user) {
       throw new ConflictError('Error in registration', [
@@ -46,17 +46,41 @@ export class AuthService {
       role: initialRole,
     });
 
-    const loginTokens: AuthResponseDto = {
-      accessToken: this.tokenService.createAccessToken(newUser),
-      refreshToken: await this.tokenService.createRefreshToken(newUser),
-    };
+    const confirmationToken =
+      await this.tokenService.createConfirmationToken(newUser);
 
-    return loginTokens;
+    console.log(
+      `[EMAIL MOCK] To: ${newUser.email} | Confirmation token: ${confirmationToken}`,
+    );
+  }
+
+  public async confirmEmail(rawToken: string): Promise<AuthResponseDto> {
+    const user =
+      await this.tokenService.validateAndConsumeConfirmationToken(rawToken);
+
+    const activeUser = await this.userService.activateUser(user.id);
+
+    return {
+      accessToken: this.tokenService.createAccessToken(activeUser),
+      refreshToken: await this.tokenService.createRefreshToken(activeUser),
+    };
   }
 
   public async refresh(rawToken: string): Promise<AuthResponseDto> {
     const { user, newRawToken } =
       await this.tokenService.rotateRefreshToken(rawToken);
+
+    if (
+      user.status === UserStatus.INACTIVE ||
+      user.status === UserStatus.BANNED ||
+      user.status === UserStatus.PENDING_VERIFICATION
+    ) {
+      await this.tokenService.revokeRefreshToken(user);
+      throw new ForbiddenError(
+        'Your account is not active. Please contact support.',
+        [],
+      );
+    }
 
     return {
       accessToken: this.tokenService.createAccessToken(user),

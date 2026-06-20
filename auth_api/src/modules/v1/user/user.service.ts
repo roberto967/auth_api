@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '../../../common/decorator/InjectRepository.decorator';
 import { CreateUserDto } from './dto/createUser.dto';
+import { UserStatus } from './enums/userStatus.enum';
 
 @injectable()
 export class UserService {
@@ -27,5 +28,10 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ email });
 
     return user;
+  }
+
+  public async activateUser(userId: string): Promise<User> {
+    await this.userRepository.update(userId, { status: UserStatus.ACTIVE });
+    return (await this.userRepository.findOneBy({ id: userId })) as User;
   }
 }

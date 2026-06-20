@@ -24,6 +24,7 @@ import { unexpectedErrorExample } from '../../../error/example/unexpected.exampl
 import { IErrorResponse } from '../../../error/interface/error.interface';
 import { LoginUserDto } from './dto/loginLocal.dto';
 import { RefreshTokenDto } from './dto/refreshToken.dto';
+import { ConfirmEmailDto } from './dto/confirmEmail.dto';
 import {
   expiredRefreshTokenExample,
   forbiddenErrorExample,
@@ -57,10 +58,27 @@ export class AuthController {
   )
   @Post('signup')
   @Middlewares(validateDto(SignUpDto))
-  public async signUp(@Body() signUpData: SignUpDto): Promise<AuthResponseDto> {
-    const tokens = await this.authService.signUp(signUpData);
+  public async signUp(@Body() signUpData: SignUpDto): Promise<void> {
+    await this.authService.signUp(signUpData);
+  }
 
-    return tokens;
+  @SuccessResponse('200', 'OK')
+  @Response<IErrorResponse>(
+    HttpErrors.BadRequest,
+    'Validation Failed',
+    validationErrorExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Unauthorized,
+    'Invalid or expired confirmation token',
+    invalidRefreshTokenExample,
+  )
+  @Post('confirm-email')
+  @Middlewares(validateDto(ConfirmEmailDto))
+  public async confirmEmail(
+    @Body() body: ConfirmEmailDto,
+  ): Promise<AuthResponseDto> {
+    return this.authService.confirmEmail(body.token);
   }
 
   @SuccessResponse('200', 'OK')
@@ -108,6 +126,11 @@ export class AuthController {
     HttpErrors.Unauthorized,
     'Refresh token expired',
     expiredRefreshTokenExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Forbidden,
+    'Account inactive or banned',
+    forbiddenErrorExample,
   )
   @Post('refresh')
   @Middlewares(validateDto(RefreshTokenDto))
