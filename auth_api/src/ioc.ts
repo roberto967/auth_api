@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IocContainer } from 'tsoa';
 import { container } from 'tsyringe';
 
