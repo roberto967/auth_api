@@ -17,6 +17,9 @@ export const jwtStrategy: JwtStrategy = new JwtStrategy(
         if (!user) {
           return done(null, false);
         }
+        if (payload.tokenVersion !== user.tokenVersion) {
+          return done(null, false);
+        }
         return done(null, user);
       } catch (error) {
         return done(error, false);

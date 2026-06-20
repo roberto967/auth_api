@@ -34,4 +34,8 @@ export class UserService {
     await this.userRepository.update(userId, { status: UserStatus.ACTIVE });
     return (await this.userRepository.findOneBy({ id: userId })) as User;
   }
+
+  public async incrementTokenVersion(userId: string): Promise<void> {
+    await this.userRepository.increment({ id: userId }, 'tokenVersion', 1);
+  }
 }
