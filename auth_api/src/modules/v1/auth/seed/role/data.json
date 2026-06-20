@@ -1,0 +1,16 @@
+{
+  "roles": [
+    {
+      "name": "admin",
+      "description": "Administrator role with full access"
+    },
+    {
+      "name": "user",
+      "description": "Regular user role with limited access"
+    },
+    {
+      "name": "moderator",
+      "description": "Moderator role with permissions to manage content"
+    }
+  ]
+}
