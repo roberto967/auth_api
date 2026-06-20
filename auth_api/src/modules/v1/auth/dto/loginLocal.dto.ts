@@ -5,10 +5,10 @@ export class LoginUserDto {
   @Example('john.doe@example.com')
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  email!: string;
 
   @Example('P@ssw0rd!')
   // @IsStrongPassword(strongPasswordConfig)
   @IsNotEmpty()
-  password: string;
+  password!: string;
 }

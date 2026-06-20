@@ -1,11 +1,11 @@
 import { Role } from '../../auth/entities/roles.entity';
 
 export class CreateUserDto {
-  email: string;
+  email!: string;
 
-  passwordHash: string;
+  passwordHash!: string;
 
-  name: string;
+  name!: string;
 
-  role: Role;
+  role!: Role;
 }

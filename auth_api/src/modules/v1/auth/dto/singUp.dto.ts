@@ -13,16 +13,16 @@ export class SignUpDto {
   @IsString()
   @MinLength(3)
   @IsNotEmpty()
-  name: string;
+  name!: string;
 
   @Example('john.doe@example.com')
   @IsString()
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+  email!: string;
 
   @Example('P@ssw0rd!')
   @IsStrongPassword(strongPasswordConfig)
   @IsNotEmpty()
-  password: string;
+  password!: string;
 }

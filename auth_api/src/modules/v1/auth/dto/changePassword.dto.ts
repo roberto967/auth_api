@@ -4,9 +4,9 @@ import { strongPasswordConfig } from '../../../../config/passwordConfig';
 export class ChangePasswordDto {
   @IsNotEmpty()
   @IsStrongPassword(strongPasswordConfig)
-  newPassword: string;
+  newPassword!: string;
 
   @IsNotEmpty()
   @IsStrongPassword(strongPasswordConfig)
-  currentPassword: string;
+  currentPassword!: string;
 }
