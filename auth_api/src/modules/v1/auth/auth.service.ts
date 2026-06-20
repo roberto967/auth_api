@@ -67,8 +67,7 @@ export class AuthService {
   }
 
   public async refresh(rawToken: string): Promise<AuthResponseDto> {
-    const { user, newRawToken } =
-      await this.tokenService.rotateRefreshToken(rawToken);
+    const user = await this.tokenService.validateRefreshToken(rawToken);
 
     if (
       user.status === UserStatus.INACTIVE ||
@@ -81,6 +80,8 @@ export class AuthService {
         [],
       );
     }
+
+    const newRawToken = await this.tokenService.createRefreshToken(user);
 
     return {
       accessToken: this.tokenService.createAccessToken(user),

@@ -41,9 +41,7 @@ export class TokenService {
     });
   }
 
-  async rotateRefreshToken(
-    rawToken: string,
-  ): Promise<{ user: User; newRawToken: string }> {
+  async validateRefreshToken(rawToken: string): Promise<User> {
     const tokenHash = this.cryptoService.hashToken(rawToken);
 
     const tokenEntity = await this.refreshTokenRepository.findOne({
@@ -60,9 +58,7 @@ export class TokenService {
       throw new UnauthorizedError('Refresh token expired');
     }
 
-    const newRawToken = await this.createRefreshToken(tokenEntity.user);
-
-    return { user: tokenEntity.user, newRawToken };
+    return tokenEntity.user;
   }
 
   async createConfirmationToken(user: User): Promise<string> {
