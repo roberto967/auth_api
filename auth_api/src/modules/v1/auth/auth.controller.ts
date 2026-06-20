@@ -84,13 +84,12 @@ export class AuthController {
     return tokens;
   }
 
-  @SuccessResponse('200', 'OK')
+  @SuccessResponse('204', 'No Content')
   @Response<IErrorResponse>(HttpErrors.Unauthorized, 'Unauthorized', invalidCredentialsErrorExample)
   @Post('logout')
   @Security('jwt')
-  public async logout(@Request() req: ExpressRequest): Promise<string> {
+  public async logout(@Request() req: ExpressRequest): Promise<void> {
     const user = req.user as User;
-
-    return user.name;
+    await this.authService.logout(user);
   }
 }

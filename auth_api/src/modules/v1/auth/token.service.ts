@@ -33,6 +33,10 @@ export class TokenService {
     });
   }
 
+  async revokeRefreshToken(user: User): Promise<void> {
+    await this.refreshTokenRepository.delete({ user });
+  }
+
   async createRefreshToken(user: User): Promise<string> {
     await this.refreshTokenRepository.delete({ user: user });
 

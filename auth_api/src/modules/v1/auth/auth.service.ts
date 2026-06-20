@@ -54,6 +54,10 @@ export class AuthService {
     return loginTokens;
   }
 
+  public async logout(user: User): Promise<void> {
+    await this.tokenService.revokeRefreshToken(user);
+  }
+
   public async login(user: User): Promise<AuthResponseDto> {
     if (
       user.status === UserStatus.INACTIVE ||
