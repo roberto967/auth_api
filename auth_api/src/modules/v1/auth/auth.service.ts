@@ -65,7 +65,7 @@ export class AuthService {
     ) {
       throw new ForbiddenError(
         'Your account is not active. Please contact support.',
-        null,
+        [],
       );
     }
 

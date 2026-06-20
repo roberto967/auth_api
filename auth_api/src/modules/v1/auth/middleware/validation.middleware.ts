@@ -3,7 +3,7 @@ import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { ClassConstructor } from 'class-transformer/types/interfaces';
 import { HttpError } from '../../../../error/http.error';
-import { HttpErrors } from '../../../../common/Enum/httpsErros.enum';
+import { HttpErrors } from '../../../../common/Enum/httpsErrors.enum';
 
 export function validateDto<T extends object>(
   dtoClass: ClassConstructor<T>,

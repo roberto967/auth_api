@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { HttpError } from '../error/http.error';
 import { unexpectedErrorExample } from '../error/example/unexpected.example';
-import { HttpErrors } from '../common/Enum/httpsErros.enum';
+import { HttpErrors } from '../common/Enum/httpsErrors.enum';
 
 export function errorHandler(
   err: Error,
   req: Request,
   res: Response,
-  _next: NextFunction, // eslint-disable-line @typescript-eslint/no-unused-vars
+  _next: NextFunction,
 ) {
   console.error(`[ERROR] ${new Date().toISOString()}`);
   console.error(`Route: ${req.method} ${req.originalUrl}`);

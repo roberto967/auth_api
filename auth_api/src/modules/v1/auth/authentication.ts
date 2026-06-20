@@ -6,7 +6,7 @@ import { UnauthorizedError } from '../../../error/custom.error';
 export function expressAuthentication(
   request: Request,
   securityName: string,
-  scopes?: string[],
+  _scopes?: string[],
 ): Promise<User> {
   if (securityName === 'jwt') {
     return new Promise((resolve, reject) => {

@@ -2,7 +2,7 @@ import { Controller, Get, Middlewares, Route, Tags, Security } from 'tsoa';
 import { injectable } from 'tsyringe';
 import { UserService } from './user.service';
 import { HttpError } from '../../../error/http.error';
-import { HttpErrors } from '../../../common/Enum/httpsErros.enum';
+import { HttpErrors } from '../../../common/Enum/httpsErrors.enum';
 import { requirePermissions } from '../auth/middleware/permission.middleware';
 
 @injectable()

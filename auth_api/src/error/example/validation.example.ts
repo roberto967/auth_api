@@ -1,4 +1,4 @@
-import { HttpErrors } from '../../common/Enum/httpsErros.enum';
+import { HttpErrors } from '../../common/Enum/httpsErrors.enum';
 import { IErrorResponse } from '../interface/error.interface';
 
 const STATUS_CODE = HttpErrors.BadRequest;

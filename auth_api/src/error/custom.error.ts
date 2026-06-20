@@ -1,5 +1,5 @@
 import { HttpError } from './http.error';
-import { HttpErrors } from '../common/Enum/httpsErros.enum';
+import { HttpErrors } from '../common/Enum/httpsErrors.enum';
 
 export class ConflictError extends HttpError {
   constructor(message: string, details: string[] = []) {

@@ -12,7 +12,6 @@ const swaggerDoc = JSON.parse(
 
 const router = Router();
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 RegisterRoutesV1(router);
 
 router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));

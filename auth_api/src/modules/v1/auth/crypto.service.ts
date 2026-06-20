@@ -17,6 +17,7 @@ export class CryptoService {
     storedPassword: string,
   ): Promise<boolean> {
     const [salt, storedHash] = storedPassword.split('.');
+    if (!salt || !storedHash) return false;
     const hash = (await scrypt(password, salt, 32)) as Buffer;
     return storedHash === hash.toString('hex');
   }
@@ -30,6 +31,7 @@ export class CryptoService {
 
   async validateOtp(otp: string, storedOtp: string): Promise<boolean> {
     const [salt, storedHash] = storedOtp.split('.');
+    if (!salt || !storedHash) return false;
     const hash = (await scrypt(otp, salt, 32)) as Buffer;
     return storedHash === hash.toString('hex');
   }

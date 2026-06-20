@@ -16,7 +16,7 @@ export const localStrategy: LocalStrategy = new LocalStrategy(
         const cryptoService = container.resolve(CryptoService);
 
         const user = await userService.findUserByEmail(email);
-        if (!user) {
+        if (!user || !user.passwordHash) {
           return done(
             new HttpError('Unauthorized', 401, 'Invalid email or password', []),
             false,

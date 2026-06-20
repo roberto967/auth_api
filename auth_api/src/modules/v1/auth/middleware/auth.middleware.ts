@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { User } from '../../user/entities/user.entity';
 import { IErrorResponse } from '../../../../error/interface/error.interface';
-import { HttpErrors } from '../../../../common/Enum/httpsErros.enum';
+import { HttpErrors } from '../../../../common/Enum/httpsErrors.enum';
 
 export function localAuthMiddleware(
   req: Request,
@@ -22,7 +22,7 @@ export function localAuthMiddleware(
             name: 'InvalidCredentialsError',
             statusCode: HttpErrors.Unauthorized,
             message: info?.message || 'Invalid email or password.',
-            details: null,
+            details: [],
           };
           return res.status(HttpErrors.Unauthorized).json(errorResponse);
         }

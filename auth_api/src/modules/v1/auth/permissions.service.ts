@@ -4,7 +4,7 @@ import { Role } from './entities/roles.entity';
 import { Permission } from './entities/permission.entity';
 import { UserRole } from './enum/userRole.enum';
 import { HttpError } from '../../../error/http.error';
-import { HttpErrors } from '../../../common/Enum/httpsErros.enum';
+import { HttpErrors } from '../../../common/Enum/httpsErrors.enum';
 import { injectable } from 'tsyringe';
 
 @injectable()

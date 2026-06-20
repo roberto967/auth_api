@@ -19,7 +19,7 @@ import {
   conflictErrorExample,
   validationErrorExample,
 } from '../../../error/example/validation.example';
-import { HttpErrors } from '../../../common/Enum/httpsErros.enum';
+import { HttpErrors } from '../../../common/Enum/httpsErrors.enum';
 import { unexpectedErrorExample } from '../../../error/example/unexpected.example';
 import { IErrorResponse } from '../../../error/interface/error.interface';
 import { LoginUserDto } from './dto/loginLocal.dto';
@@ -103,7 +103,7 @@ export class AuthController {
   @Middlewares(validateDto(LoginUserDto), localAuthMiddleware)
   public async signIn(
     @Request() req: ExpressRequest,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     @Body() _loginData: LoginUserDto,
   ): Promise<AuthResponseDto> {
     const user = req.user as User;
