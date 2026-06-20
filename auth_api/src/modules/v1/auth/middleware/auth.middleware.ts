@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { User } from '../../user/entities/user.entity';
-import { IErrorResponse } from '../../../../error/interface/error.interface';
-import { HttpErrors } from '../../../../common/Enum/httpsErrors.enum';
+import { InvalidCredentialsError } from '../../../../error/custom.error';
 
 export function localAuthMiddleware(
   req: Request,
@@ -18,13 +17,10 @@ export function localAuthMiddleware(
           return next(err);
         }
         if (!user) {
-          const errorResponse: IErrorResponse = {
-            name: 'InvalidCredentialsError',
-            statusCode: HttpErrors.Unauthorized,
-            message: info?.message || 'Invalid email or password.',
-            details: [],
-          };
-          return res.status(HttpErrors.Unauthorized).json(errorResponse);
+          const error = new InvalidCredentialsError(
+            info?.message || 'Invalid email or password.',
+          );
+          return res.status(error.statusCode).json(error.toJSON());
         }
         req.user = user;
         next();

@@ -10,6 +10,7 @@ import {
 } from 'tsoa';
 import { injectable } from 'tsyringe';
 import { UserService } from './user.service';
+import { InjectService } from '../../../common/decorator/InjectService.decorator';
 import { HttpError } from '../../../error/http.error';
 import { HttpErrors } from '../../../common/Enum/httpsErrors.enum';
 import { requirePermissions } from '../auth/middleware/permission.middleware';
@@ -25,7 +26,10 @@ import { unexpectedErrorExample } from '../../../error/example/unexpected.exampl
 @Tags('Usuários')
 @Response<IErrorResponse>(500, 'Internal Server Error', unexpectedErrorExample)
 export class UsersController extends Controller {
-  constructor(private readonly userService: UserService) {
+  constructor(
+    @InjectService(UserService)
+    private readonly userService: UserService,
+  ) {
     super();
   }
 
