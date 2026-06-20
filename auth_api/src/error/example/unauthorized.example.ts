@@ -1,18 +1,30 @@
 import { HttpErrors } from '../../common/Enum/httpsErrors.enum';
 import { IErrorResponse } from '../interface/error.interface';
 
-const STATUS_CODE = HttpErrors.Unauthorized;
-
 export const forbiddenErrorExample: IErrorResponse = {
   name: 'ForbiddenError',
-  statusCode: STATUS_CODE,
-  message: 'You are not authorized to access this resource.',
+  statusCode: HttpErrors.Forbidden,
+  message: 'Your account is not active. Please contact support.',
   details: [],
 };
 
 export const invalidCredentialsErrorExample: IErrorResponse = {
   name: 'InvalidCredentialsError',
-  statusCode: STATUS_CODE,
+  statusCode: HttpErrors.Unauthorized,
   message: 'Invalid email or password.',
+  details: [],
+};
+
+export const invalidRefreshTokenExample: IErrorResponse = {
+  name: 'UnauthorizedError',
+  statusCode: HttpErrors.Unauthorized,
+  message: 'Invalid refresh token.',
+  details: [],
+};
+
+export const expiredRefreshTokenExample: IErrorResponse = {
+  name: 'UnauthorizedError',
+  statusCode: HttpErrors.Unauthorized,
+  message: 'Refresh token expired.',
   details: [],
 };

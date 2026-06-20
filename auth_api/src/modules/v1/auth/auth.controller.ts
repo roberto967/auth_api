@@ -23,9 +23,12 @@ import { HttpErrors } from '../../../common/Enum/httpsErrors.enum';
 import { unexpectedErrorExample } from '../../../error/example/unexpected.example';
 import { IErrorResponse } from '../../../error/interface/error.interface';
 import { LoginUserDto } from './dto/loginLocal.dto';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
 import {
+  expiredRefreshTokenExample,
   forbiddenErrorExample,
   invalidCredentialsErrorExample,
+  invalidRefreshTokenExample,
 } from '../../../error/example/unauthorized.example';
 import { localAuthMiddleware } from './middleware/auth.middleware';
 import { Request as ExpressRequest } from 'express';
@@ -41,16 +44,17 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  /**
-   * Register a new user in the system.
-   * If successful, returns a pair of access and update tokens.
-   * @summary User Registration
-   * @param signUpData Object containing the data required to create the new user's account (e.g., name, email, password).
-   * @returns An object containing the access and refresh tokens for the newly created user.
-   */
   @SuccessResponse('201', 'Created')
-  @Response<IErrorResponse>(HttpErrors.BadRequest, 'Validation Failed', validationErrorExample)
-  @Response<IErrorResponse>(HttpErrors.Conflict, 'Conflict Error', conflictErrorExample)
+  @Response<IErrorResponse>(
+    HttpErrors.BadRequest,
+    'Validation Failed',
+    validationErrorExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Conflict,
+    'Conflict Error',
+    conflictErrorExample,
+  )
   @Post('signup')
   @Middlewares(validateDto(SignUpDto))
   public async signUp(@Body() signUpData: SignUpDto): Promise<AuthResponseDto> {
@@ -59,17 +63,22 @@ export class AuthController {
     return tokens;
   }
 
-  /**
-   * Authenticate a user using their email and password.
-   * If successful, returns a pair of access and refresh tokens.
-   * @summary User Login
-   * @param _loginData Object containing the user's login credentials (email and password).
-   * @returns An object containing the access and refresh tokens.
-   */
   @SuccessResponse('200', 'OK')
-  @Response<IErrorResponse>(HttpErrors.BadRequest, 'Validation Failed', validationErrorExample)
-  @Response<IErrorResponse>(HttpErrors.Forbidden, 'Forbidden', forbiddenErrorExample)
-  @Response<IErrorResponse>(HttpErrors.Unauthorized, 'Invalid Credentials', invalidCredentialsErrorExample)
+  @Response<IErrorResponse>(
+    HttpErrors.BadRequest,
+    'Validation Failed',
+    validationErrorExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Forbidden,
+    'Forbidden',
+    forbiddenErrorExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Unauthorized,
+    'Invalid Credentials',
+    invalidCredentialsErrorExample,
+  )
   @Post('login')
   @Middlewares(validateDto(LoginUserDto), localAuthMiddleware)
   public async signIn(
@@ -84,8 +93,36 @@ export class AuthController {
     return tokens;
   }
 
+  @SuccessResponse('200', 'OK')
+  @Response<IErrorResponse>(
+    HttpErrors.BadRequest,
+    'Validation Failed',
+    validationErrorExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Unauthorized,
+    'Invalid refresh token',
+    invalidRefreshTokenExample,
+  )
+  @Response<IErrorResponse>(
+    HttpErrors.Unauthorized,
+    'Refresh token expired',
+    expiredRefreshTokenExample,
+  )
+  @Post('refresh')
+  @Middlewares(validateDto(RefreshTokenDto))
+  public async refresh(
+    @Body() body: RefreshTokenDto,
+  ): Promise<AuthResponseDto> {
+    return this.authService.refresh(body.refreshToken);
+  }
+
   @SuccessResponse('204', 'No Content')
-  @Response<IErrorResponse>(HttpErrors.Unauthorized, 'Unauthorized', invalidCredentialsErrorExample)
+  @Response<IErrorResponse>(
+    HttpErrors.Unauthorized,
+    'Unauthorized',
+    invalidCredentialsErrorExample,
+  )
   @Post('logout')
   @Security('jwt')
   public async logout(@Request() req: ExpressRequest): Promise<void> {

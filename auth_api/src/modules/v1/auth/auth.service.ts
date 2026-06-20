@@ -54,6 +54,16 @@ export class AuthService {
     return loginTokens;
   }
 
+  public async refresh(rawToken: string): Promise<AuthResponseDto> {
+    const { user, newRawToken } =
+      await this.tokenService.rotateRefreshToken(rawToken);
+
+    return {
+      accessToken: this.tokenService.createAccessToken(user),
+      refreshToken: newRawToken,
+    };
+  }
+
   public async logout(user: User): Promise<void> {
     await this.tokenService.revokeRefreshToken(user);
   }

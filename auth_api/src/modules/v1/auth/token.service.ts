@@ -8,6 +8,7 @@ import { AccessTokenPayload } from './interfaces/token.types';
 import { InjectRepository } from '../../../common/decorator/InjectRepository.decorator';
 import { InjectService } from '../../../common/decorator/InjectService.decorator';
 import { CryptoService } from './crypto.service';
+import { UnauthorizedError } from '../../../error/custom.error';
 
 @injectable()
 export class TokenService {
@@ -31,6 +32,30 @@ export class TokenService {
         tokenDurationConfig.ACCESS_TOKEN_DURATION_MS / 1000,
       ), // Convert ms to seconds
     });
+  }
+
+  async rotateRefreshToken(
+    rawToken: string,
+  ): Promise<{ user: User; newRawToken: string }> {
+    const tokenHash = this.cryptoService.hashToken(rawToken);
+
+    const tokenEntity = await this.refreshTokenRepository.findOne({
+      where: { tokenHash },
+      relations: { user: true },
+    });
+
+    if (!tokenEntity) {
+      throw new UnauthorizedError('Invalid refresh token');
+    }
+
+    if (tokenEntity.isExpired()) {
+      await this.refreshTokenRepository.delete({ id: tokenEntity.id });
+      throw new UnauthorizedError('Refresh token expired');
+    }
+
+    const newRawToken = await this.createRefreshToken(tokenEntity.user);
+
+    return { user: tokenEntity.user, newRawToken };
   }
 
   async revokeRefreshToken(user: User): Promise<void> {

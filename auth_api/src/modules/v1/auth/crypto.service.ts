@@ -36,14 +36,16 @@ export class CryptoService {
     return storedHash === hash.toString('hex');
   }
 
+  hashToken(token: string): string {
+    return createHash('sha256').update(token).digest('hex');
+  }
+
   generateAndHashToken(): [string, string] {
     const token = randomBytes(40).toString('hex');
-    const hash = createHash('sha256').update(token).digest('hex');
-    return [token, hash];
+    return [token, this.hashToken(token)];
   }
 
   validateToken(token: string, storedHash: string): boolean {
-    const hash = createHash('sha256').update(token).digest('hex');
-    return hash === storedHash;
+    return this.hashToken(token) === storedHash;
   }
 }
