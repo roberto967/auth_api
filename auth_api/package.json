@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "concurrently \"yarn tsoa:watch\" \"yarn dev:server\"",
-    "dev:server": "NODE_ENV=development ts-node-dev --respawn --transpile-only -r tsconfig-paths/register src/server.ts",
+    "dev:server": "NODE_ENV=development ts-node-dev --respawn --transpile-only --watch .env.development -r tsconfig-paths/register src/server.ts",
     "tsoa:watch": "tsoa spec-and-routes -c tsoa.v1.json --watch",
     "tsoa:gen": "tsoa spec-and-routes -c tsoa.v1.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

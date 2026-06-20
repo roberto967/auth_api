@@ -20,7 +20,7 @@ export class PermissionsService {
   public async findRoleByName(role_name: UserRole): Promise<Role> {
     const role = await this.rolesRepository.findOne({
       where: { name: role_name },
-      relations: ['permissions'],
+      relations: { permissions: true },
     });
 
     if (!role) {

@@ -38,7 +38,7 @@ export class AuthController {
   constructor(
     @InjectService(AuthService)
     private readonly authService: AuthService,
-  ) { }
+  ) {}
 
   /**
    * Register a new user in the system.

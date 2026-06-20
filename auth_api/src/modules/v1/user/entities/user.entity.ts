@@ -20,7 +20,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   name: string | null;
 
   @Column({ unique: true })
@@ -37,7 +37,7 @@ export class User {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   passwordHash?: string | null;
 
   // Tokens relationship
@@ -54,7 +54,12 @@ export class User {
   @Column({ nullable: true })
   provider?: string;
 
-  @Column({ name: 'provider_id', nullable: true, unique: true })
+  @Column({
+    type: 'varchar',
+    name: 'provider_id',
+    nullable: true,
+    unique: true,
+  })
   providerId?: string | null;
 
   // Timestamps - TypeORM will handle these automatically
