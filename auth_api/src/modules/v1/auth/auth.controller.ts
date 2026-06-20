@@ -34,6 +34,7 @@ import { User } from '../user/entities/user.entity';
 @injectable()
 @Route('auth')
 @Tags('Authentication')
+@Response<IErrorResponse>(500, 'Internal Server Error', unexpectedErrorExample)
 export class AuthController {
   constructor(
     @InjectService(AuthService)
@@ -48,21 +49,8 @@ export class AuthController {
    * @returns An object containing the access and refresh tokens for the newly created user.
    */
   @SuccessResponse('201', 'Created')
-  @Response<IErrorResponse>(
-    HttpErrors.BadRequest,
-    'Validation Failed',
-    validationErrorExample,
-  )
-  @Response<IErrorResponse>(
-    500,
-    'Internal Server Error',
-    unexpectedErrorExample,
-  )
-  @Response<IErrorResponse>(
-    HttpErrors.Conflict,
-    'Conflict Error',
-    conflictErrorExample,
-  )
+  @Response<IErrorResponse>(HttpErrors.BadRequest, 'Validation Failed', validationErrorExample)
+  @Response<IErrorResponse>(HttpErrors.Conflict, 'Conflict Error', conflictErrorExample)
   @Post('signup')
   @Middlewares(validateDto(SignUpDto))
   public async signUp(@Body() signUpData: SignUpDto): Promise<AuthResponseDto> {
@@ -79,26 +67,9 @@ export class AuthController {
    * @returns An object containing the access and refresh tokens.
    */
   @SuccessResponse('200', 'OK')
-  @Response<IErrorResponse>(
-    HttpErrors.BadRequest,
-    'Validation Failed',
-    validationErrorExample,
-  )
-  @Response<IErrorResponse>(
-    500,
-    'Internal Server Error',
-    unexpectedErrorExample,
-  )
-  @Response<IErrorResponse>(
-    HttpErrors.Forbidden,
-    'Forbidden',
-    forbiddenErrorExample,
-  )
-  @Response<IErrorResponse>(
-    HttpErrors.Unauthorized,
-    'Invalid Credentials',
-    invalidCredentialsErrorExample,
-  )
+  @Response<IErrorResponse>(HttpErrors.BadRequest, 'Validation Failed', validationErrorExample)
+  @Response<IErrorResponse>(HttpErrors.Forbidden, 'Forbidden', forbiddenErrorExample)
+  @Response<IErrorResponse>(HttpErrors.Unauthorized, 'Invalid Credentials', invalidCredentialsErrorExample)
   @Post('login')
   @Middlewares(validateDto(LoginUserDto), localAuthMiddleware)
   public async signIn(
@@ -113,6 +84,8 @@ export class AuthController {
     return tokens;
   }
 
+  @SuccessResponse('200', 'OK')
+  @Response<IErrorResponse>(HttpErrors.Unauthorized, 'Unauthorized', invalidCredentialsErrorExample)
   @Post('logout')
   @Security('jwt')
   public async logout(@Request() req: ExpressRequest): Promise<string> {
