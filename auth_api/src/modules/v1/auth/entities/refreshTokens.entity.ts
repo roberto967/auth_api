@@ -16,18 +16,15 @@ export class RefreshToken {
   @Column({ unique: true })
   tokenHash: string; // Token will be hashed before storage
 
-  @Column({ name: 'expires_at' })
+  @Column({ type: 'timestamp', name: 'expires_at' })
   expiresAt: Date;
 
-  @CreateDateColumn({ name: 'created_at' })
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
   @ManyToOne(() => User, user => user.refreshTokens, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
-
-  @Column({ name: 'user_id' })
-  userId: string;
 
   public isExpired(): boolean {
     return Date.now() >= this.expiresAt.getTime();

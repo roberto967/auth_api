@@ -33,9 +33,6 @@ export class UserToken {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column({ name: 'user_id' })
-  userId: string;
-
   public isExpired(): boolean {
     return Date.now() >= this.expiresAt.getTime();
   }
