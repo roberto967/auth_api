@@ -6,15 +6,17 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Permission } from './permission.entity';
-import { UserRole } from '../enum/userRole.enum';
 
 @Entity('roles')
 export class Role {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
-  @Column({ unique: true, type: 'enum', enum: UserRole })
-  name: UserRole; // Ex: 'admin', 'moderator', 'user'
+  @Column({ unique: true, type: 'varchar' })
+  name!: string;
+
+  @Column({ type: 'text', nullable: true })
+  description?: string;
 
   @ManyToMany(() => Permission, { cascade: true, eager: true })
   @JoinTable({
@@ -22,5 +24,5 @@ export class Role {
     joinColumn: { name: 'role_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
   })
-  permissions: Permission[];
+  permissions!: Permission[];
 }

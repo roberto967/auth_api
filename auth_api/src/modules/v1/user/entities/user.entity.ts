@@ -18,37 +18,37 @@ import { Role } from '../../auth/entities/roles.entity';
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  id!: string;
 
   @Column({ type: 'varchar', nullable: true })
-  name: string | null;
+  name!: string | null;
 
   @Column({ unique: true })
-  email: string;
+  email!: string;
 
   @Column({
     type: 'enum',
     enum: UserStatus,
     default: UserStatus.PENDING_VERIFICATION,
   })
-  status: UserStatus;
+  status!: UserStatus;
 
   @ManyToOne(() => Role, { eager: true })
   @JoinColumn({ name: 'role_id' })
-  role: Role;
+  role!: Role;
 
   @Column({ type: 'varchar', nullable: true })
   passwordHash?: string | null;
 
   // Tokens relationship
   @OneToMany(() => UserToken, token => token.user)
-  confirmationTokens: UserToken[];
+  confirmationTokens!: UserToken[];
 
   @OneToMany(() => RefreshToken, token => token.user)
-  refreshTokens: RefreshToken[];
+  refreshTokens!: RefreshToken[];
 
   @Column('integer', { default: 0 })
-  tokenVersion: number;
+  tokenVersion!: number;
 
   // OAuth fields
   @Column({ nullable: true })
@@ -64,10 +64,10 @@ export class User {
 
   // Timestamps - TypeORM will handle these automatically
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt!: Date;
 
   @DeleteDateColumn({ name: 'deleted_at', select: false })
   deletedAt?: Date;
