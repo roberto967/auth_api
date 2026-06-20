@@ -22,20 +22,6 @@ export class CryptoService {
     return storedHash === hash.toString('hex');
   }
 
-  async generateAndHashOtp6Figures(): Promise<[string, string]> {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const salt = randomBytes(8).toString('hex');
-    const hashedOtp = (await scrypt(otp, salt, 32)) as Buffer;
-    return [otp, `${salt}.${hashedOtp.toString('hex')}`];
-  }
-
-  async validateOtp(otp: string, storedOtp: string): Promise<boolean> {
-    const [salt, storedHash] = storedOtp.split('.');
-    if (!salt || !storedHash) return false;
-    const hash = (await scrypt(otp, salt, 32)) as Buffer;
-    return storedHash === hash.toString('hex');
-  }
-
   hashToken(token: string): string {
     return createHash('sha256').update(token).digest('hex');
   }
@@ -45,7 +31,4 @@ export class CryptoService {
     return [token, this.hashToken(token)];
   }
 
-  validateToken(token: string, storedHash: string): boolean {
-    return this.hashToken(token) === storedHash;
-  }
 }

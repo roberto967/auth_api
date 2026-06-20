@@ -74,7 +74,6 @@ export class AuthService {
       user.status === UserStatus.BANNED ||
       user.status === UserStatus.PENDING_VERIFICATION
     ) {
-      await this.tokenService.revokeRefreshToken(user);
       throw new ForbiddenError(
         'Your account is not active. Please contact support.',
         [],

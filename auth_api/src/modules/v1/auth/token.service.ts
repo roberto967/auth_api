@@ -56,6 +56,8 @@ export class TokenService {
       throw new UnauthorizedError('Refresh token expired');
     }
 
+    await this.refreshTokenRepository.delete({ id: tokenEntity.id });
+
     return tokenEntity.user;
   }
 
