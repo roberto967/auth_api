@@ -1,7 +1,7 @@
 export interface DbEnvVariables {
-  DATABASE_HOST: string;
-  DATABASE_PORT: number;
-  DATABASE_USERNAME: string;
-  DATABASE_PASSWORD: string;
-  DATABASE: string;
+  DB_HOST: string;
+  DB_PORT: number;
+  DB_USER: string;
+  DB_PASSWORD: string;
+  DB_NAME: string;
 }

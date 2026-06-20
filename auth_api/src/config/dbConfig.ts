@@ -1,14 +1,15 @@
 import { DataSourceOptions } from 'typeorm';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import path from 'path';
+import { dbEnvVariables } from './env';
 
 export const dbConfig: DataSourceOptions = {
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: dbEnvVariables.DB_HOST,
+  port: dbEnvVariables.DB_PORT,
+  username: dbEnvVariables.DB_USER,
+  password: dbEnvVariables.DB_PASSWORD,
+  database: dbEnvVariables.DB_NAME,
   synchronize: true, // never use TRUE in production!
   // dropSchema: true, // Adicione esta linha para dropar o schema a cada conexão
   logging: true,

@@ -2,25 +2,32 @@ import dotenv from 'dotenv';
 import { TokenVariables } from './interfaces/token-config.interface';
 import { DbEnvVariables } from './interfaces/db-config.interface';
 
-if (process.env.NODE_ENV === 'production') {
-  dotenv.config({ path: '.env' });
-} else if (process.env.NODE_ENV === 'test') {
-  dotenv.config({ path: '.env.test' });
-} else {
-  dotenv.config({ path: '.env.development' });
+const envPaths: Partial<Record<string, string>> = {
+  production: '.env',
+  test: '.env.test',
+};
+
+dotenv.config({
+  path: envPaths[process.env.NODE_ENV ?? ''] ?? '.env.development',
+});
+
+function requireEnv(key: string): string {
+  const value = process.env[key];
+  if (!value) throw new Error(`Missing required environment variable: ${key}`);
+  return value;
 }
 
 export const PORT = process.env.PORT;
 
 export const tokenConfig: TokenVariables = {
-  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
-  REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET,
+  ACCESS_TOKEN_SECRET: requireEnv('ACCESS_TOKEN_SECRET'),
+  REFRESH_TOKEN_SECRET: requireEnv('REFRESH_TOKEN_SECRET'),
 };
 
 export const dbEnvVariables: DbEnvVariables = {
-  DATABASE_HOST: process.env.DATABASE_HOST,
-  DATABASE_PORT: parseInt(process.env.DATABASE_PORT),
-  DATABASE_USERNAME: process.env.DATABASE_USERNAME,
-  DATABASE_PASSWORD: process.env.DATABASE_PASSWORD,
-  DATABASE: process.env.DATABASE,
+  DB_HOST: requireEnv('DB_HOST'),
+  DB_PORT: parseInt(requireEnv('DB_PORT')),
+  DB_USER: requireEnv('DB_USER'),
+  DB_PASSWORD: requireEnv('DB_PASSWORD'),
+  DB_NAME: requireEnv('DB_NAME'),
 };
